@@ -35,7 +35,7 @@ public class EmployeeListMapper implements ListMapper<Employee> {
 
     public Employee mapRow(ResultSet resultSet, boolean fullChain) throws SQLException {
         List<Department> departments = queryDepartments("SELECT * FROM DEPARTMENT WHERE ID = " + resultSet.getString("DEPARTMENT"));
-        Department department = (departments != null) ? departments.get(0) : null;
+        Department department = (departments != null && !departments.isEmpty()) ? departments.get(0) : null;
         Employee manager;
         if (fullChain) {
             try (Connection connection = ConnectionSource.instance().createConnection();
@@ -74,7 +74,7 @@ public class EmployeeListMapper implements ListMapper<Employee> {
             resultSet.next();
 
             List<Department> departments = queryDepartments("SELECT * FROM DEPARTMENT WHERE ID = " + resultSet.getString("DEPARTMENT"));
-            Department department = (departments != null) ? departments.get(0) : null;
+            Department department = (departments != null && !departments.isEmpty()) ? departments.get(0) : null;
             return new Employee(
                     (resultSet.getBigDecimal("ID").toBigInteger()),
                     new FullName(
